@@ -46,18 +46,18 @@ class treenode {
     ~treenode();
     int depth();
 };
-treenode::treenode() {
+inline treenode::treenode() {
     parent = first_child = last_child = prev_sibling = next_sibling = NULL;
     key = new std::string();
 }
-treenode::treenode(const std::string& key) {
+inline treenode::treenode(const std::string& key) {
     parent = first_child = last_child = prev_sibling = next_sibling = NULL;
     this->key = new std::string(key);
 }
-treenode::~treenode() {
+inline treenode::~treenode() {
     delete key;
 }
-int treenode::depth() {
+inline int treenode::depth() {
     treenode* cur = this;
     int depth = 0;
     while (cur->parent) {
@@ -116,14 +116,14 @@ class tree {
 
 // implementation of tree
 
-tree::tree() {
+inline tree::tree() {
     head_ = new treenode();
     tail_ = new treenode();
 
     head_->next_sibling = tail_;
     tail_->prev_sibling = head_;
 }
-tree::~tree() {
+inline tree::~tree() {
     if (head_->next_sibling != tail_) {
 	treenode* cur = head_->next_sibling;
 	treenode* next;
@@ -138,13 +138,13 @@ tree::~tree() {
     delete tail_;
 }
 
-tree::dfs_iterator tree::begin() const {
+inline tree::dfs_iterator tree::begin() const {
     return dfs_iterator(head_->next_sibling);
 }
-tree::dfs_iterator tree::end() const {
+inline tree::dfs_iterator tree::end() const {
     return dfs_iterator(tail_);
 }
-tree::dfs_iterator tree::insert(dfs_iterator pos, const std::string& key) {
+inline tree::dfs_iterator tree::insert(dfs_iterator pos, const std::string& key) {
     // if tail_ is directed by pos, replace pos with head_
     if (pos.node_ == tail_) {
 	pos = dfs_iterator(head_);
@@ -167,7 +167,7 @@ tree::dfs_iterator tree::insert(dfs_iterator pos, const std::string& key) {
     return dfs_iterator(newnode);
 }
 
-tree::dfs_iterator tree::add_child(dfs_iterator pos, const std::string& key) {
+inline tree::dfs_iterator tree::add_child(dfs_iterator pos, const std::string& key) {
     if (head_->next_sibling == tail_) {
 	return insert(pos, key);
     }
@@ -188,7 +188,7 @@ tree::dfs_iterator tree::add_child(dfs_iterator pos, const std::string& key) {
     return dfs_iterator(newnode);
 }
 
-tree::dfs_iterator tree::erase(dfs_iterator pos) {
+inline tree::dfs_iterator tree::erase(dfs_iterator pos) {
     if (pos.node_ == head_) { return begin(); }
     if (pos.node_ == tail_) { return end(); }
     
@@ -221,7 +221,7 @@ tree::dfs_iterator tree::erase(dfs_iterator pos) {
     delete deletenode;
 }
 
-tree::dfs_iterator tree::find(const std::string& key) {
+inline tree::dfs_iterator tree::find(const std::string& key) {
     std::map<std::string, treenode*>::iterator itr = nodemap_.find(key);
     if (itr != nodemap_.end()) {
 	return dfs_iterator(itr->second);
@@ -229,7 +229,7 @@ tree::dfs_iterator tree::find(const std::string& key) {
     return this->end();
 }
 
-tree::dfs_iterator tree::move(dfs_iterator dst, dfs_iterator src, MoveDir dir) {
+inline tree::dfs_iterator tree::move(dfs_iterator dst, dfs_iterator src, MoveDir dir) {
     if (dst == src) { return src; }
     if (dst->next_sibling && dst->next_sibling == src.node_) { return src; }
 
@@ -298,7 +298,7 @@ tree::dfs_iterator tree::move(dfs_iterator dst, dfs_iterator src, MoveDir dir) {
     return src;
 }
 
-void tree::dump() {
+inline void tree::dump() {
     std::cout << "=== Tree Dump ===" << std::endl;
     for (dfs_iterator itr = this->begin(); itr != this->end(); ++itr) {
 	for (int d = 0; d < itr->depth(); d++) {
@@ -311,24 +311,24 @@ void tree::dump() {
 
 // implementation of iterator
 
-tree::dfs_iterator::dfs_iterator() : node_(NULL) {
+inline tree::dfs_iterator::dfs_iterator() : node_(NULL) {
 }
-tree::dfs_iterator::dfs_iterator(treenode* node) {
+inline tree::dfs_iterator::dfs_iterator(treenode* node) {
     node_ = node;
 }
-treenode& tree::dfs_iterator::operator*() const {
+inline treenode& tree::dfs_iterator::operator*() const {
     return *node_;
 }
-treenode* tree::dfs_iterator::operator->() const {
+inline treenode* tree::dfs_iterator::operator->() const {
     return node_;
 }
-bool tree::dfs_iterator::operator==(const dfs_iterator& itr) const {
+inline bool tree::dfs_iterator::operator==(const dfs_iterator& itr) const {
     return (*node_->key == *itr.node_->key);
 }
-bool tree::dfs_iterator::operator!=(const dfs_iterator& itr) const {
+inline bool tree::dfs_iterator::operator!=(const dfs_iterator& itr) const {
     return (*node_->key != *itr.node_->key);
 }
-tree::dfs_iterator tree::dfs_iterator::operator++() {
+inline tree::dfs_iterator tree::dfs_iterator::operator++() {
     // traverse following order
     // firstchild => nextsibling => parent (DFS)
     if (node_->first_child) {
@@ -343,7 +343,7 @@ tree::dfs_iterator tree::dfs_iterator::operator++() {
     }
     return *this;
 }
-tree::dfs_iterator tree::dfs_iterator::operator++(int) {
+inline tree::dfs_iterator tree::dfs_iterator::operator++(int) {
     ++(*this);
     return *this;
 }
