@@ -94,7 +94,9 @@ class tree {
 
   public:
     tree();
+    tree(const tree& t);
     ~tree();
+    tree& operator=(const tree& x);
     
     dfs_iterator begin() const;
     dfs_iterator end() const;
@@ -123,6 +125,24 @@ inline tree::tree() {
     head_->next_sibling = tail_;
     tail_->prev_sibling = head_;
 }
+inline tree::tree(const tree& t) {
+    head_ = new treenode();
+    tail_ = new treenode();
+
+    head_->next_sibling = tail_;
+    tail_->prev_sibling = head_;
+
+    for (tree::iterator itr = t.begin(); itr != t.end(); itr++) {
+	treenode* cur = itr.node_;
+	if (cur->parent) {
+	    std::string key = *cur->parent->key;
+	    add_child(find(key), std::string(*cur->key));
+	}
+	else {
+	    add_child(begin(), std::string(*cur->key));
+	}
+    }
+}
 inline tree::~tree() {
     if (head_->next_sibling != tail_) {
 	treenode* cur = head_->next_sibling;
@@ -136,6 +156,13 @@ inline tree::~tree() {
     
     delete head_;
     delete tail_;
+}
+inline tree& tree::operator=(const tree& x) {
+    if (this != &x) {
+	this->~tree();
+	new (this) tree(x);
+    }
+    return *this;
 }
 
 inline tree::dfs_iterator tree::begin() const {
