@@ -168,6 +168,10 @@ tree::dfs_iterator tree::insert(dfs_iterator pos, const std::string& key) {
 }
 
 tree::dfs_iterator tree::add_child(dfs_iterator pos, const std::string& key) {
+    if (head_->next_sibling == tail_) {
+	return insert(pos, key);
+    }
+  
     treenode* newnode = new treenode(key);
     nodemap_.insert(std::make_pair(key, newnode));
     newnode->parent = pos.node_;
