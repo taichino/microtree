@@ -29,9 +29,12 @@
 
 namespace microtree {
 
+typedef picojson::object propmap;
+
+    
 class treenode {
-  public:
-    typedef picojson::object map;
+  /* public: */
+  /*   typedef picojson::object map; */
   public:
     treenode* parent;
     treenode* first_child;
@@ -39,7 +42,7 @@ class treenode {
     treenode* prev_sibling;
     treenode* next_sibling;
     std::string* key;
-    map props;
+    propmap props;
   public:
     treenode();
     treenode(const std::string& nodeid);
