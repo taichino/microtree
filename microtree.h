@@ -113,7 +113,7 @@ class tree {
     };
     dfs_iterator move(dfs_iterator dst, dfs_iterator src, MoveDir dir);
 
-    void dump();
+    void dump(bool bWithProps);
 };
 
 // implementation of tree
@@ -327,13 +327,17 @@ inline tree::dfs_iterator tree::move(dfs_iterator dst, dfs_iterator src, MoveDir
     return src;
 }
 
-inline void tree::dump() {
+inline void tree::dump(bool bWithProps=false) {
     std::cout << "=== Tree Dump ===" << std::endl;
     for (dfs_iterator itr = this->begin(); itr != this->end(); ++itr) {
 	for (int d = 0; d < itr->depth(); d++) {
 	    std::cout << "  ";
 	}
-	std::cout << *itr->key << "  " << itr->props << std::endl;
+	std::cout << *itr->key;
+	if (bWithProps) {
+	    std::cout << "  " << itr->props;
+	}
+	std::cout << std::endl;
     }
     std::cout << std::endl;
 }
