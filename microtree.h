@@ -134,13 +134,15 @@ inline tree::tree(const tree& t) {
 
     for (tree::iterator itr = t.begin(); itr != t.end(); itr++) {
 	treenode* cur = itr.node_;
+	tree::iterator added;
 	if (cur->parent) {
 	    std::string key = *cur->parent->key;
-	    add_child(find(key), std::string(*cur->key));
+	    added = add_child(find(key), std::string(*cur->key));
 	}
 	else {
-	    add_child(begin(), std::string(*cur->key));
+	    added = add_child(begin(), std::string(*cur->key));
 	}
+	added->props = cur->props;
     }
 }
 inline tree::~tree() {
