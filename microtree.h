@@ -31,10 +31,7 @@ namespace microtree {
 
 typedef picojson::object propmap;
 
-    
 class treenode {
-  /* public: */
-  /*   typedef picojson::object map; */
   public:
     treenode* parent;
     treenode* first_child;
@@ -106,7 +103,7 @@ class tree {
     dfs_iterator insert(dfs_iterator pos, const std::string& key);
     dfs_iterator add_child(dfs_iterator pos, const std::string& key);
     dfs_iterator erase(dfs_iterator pos);
-    dfs_iterator find(const std::string& key);
+    dfs_iterator find(const std::string& key);    
 
     enum MoveDir {
 	TO_BEFORE,
@@ -249,7 +246,9 @@ inline tree::dfs_iterator tree::erase(dfs_iterator pos) {
 	    deletenode->parent->last_child = NULL;
 	}
     }
-    nodemap_.erase(*deletenode->key);
+    if (deletenode->key) {
+      nodemap_.erase(*deletenode->key);
+    }
     delete deletenode;
 }
 
@@ -285,19 +284,25 @@ inline tree::dfs_iterator tree::move(dfs_iterator dst, dfs_iterator src, MoveDir
 
     // connect src node to dst along to dir
     if (dir == TO_AFTER) {
+	src->parent = dst->parent;      
 	if (dst->next_sibling) {
 	    dst->next_sibling->prev_sibling = src.node_;
 	}
-	src->parent = dst->parent;	
+	else {
+	  src->parent->last_child = src.node_;
+	}
 	src->next_sibling = dst->next_sibling;
 	dst->next_sibling = src.node_;
 	src->prev_sibling = dst.node_;
     }
     else if (dir == TO_BEFORE) {
+	src->parent = dst->parent;      
 	if (dst->prev_sibling) {
 	    dst->prev_sibling->next_sibling = src.node_;
 	}
-	src->parent = dst->parent;	
+	else {
+	  dst->parent->first_child = src.node_;
+	}
 	src->prev_sibling = dst->prev_sibling;
 	src->next_sibling = dst.node_;
 	dst->prev_sibling = src.node_;
