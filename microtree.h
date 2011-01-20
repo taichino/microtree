@@ -25,7 +25,7 @@
 
 #include <iostream>
 #include <map>
-#include "lib/picojson.h"
+#include "picojson.h"
 
 namespace microtree {
 
