@@ -102,8 +102,8 @@ class tree {
     dfs_iterator end() const;
     dfs_iterator insert(dfs_iterator pos, const std::string& key);
     dfs_iterator add_child(dfs_iterator pos, const std::string& key);
-    dfs_iterator erase(dfs_iterator pos);
-    dfs_iterator find(const std::string& key);    
+    dfs_iterator find(const std::string& key);
+    void erase(dfs_iterator pos);
 
     enum MoveDir {
 	TO_BEFORE,
@@ -217,9 +217,9 @@ inline tree::dfs_iterator tree::add_child(dfs_iterator pos, const std::string& k
     return dfs_iterator(newnode);
 }
 
-inline tree::dfs_iterator tree::erase(dfs_iterator pos) {
-    if (pos.node_ == head_) { return begin(); }
-    if (pos.node_ == tail_) { return end(); }
+inline void tree::erase(dfs_iterator pos) {
+    if (pos.node_ == head_) { return; }
+    if (pos.node_ == tail_) { return; }
     
     // erase subtree of pos
     while (pos->first_child) {
